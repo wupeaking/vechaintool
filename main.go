@@ -6,6 +6,7 @@ import (
 	"github.com/andlabs/ui"
 	_ "github.com/andlabs/ui/winmanifest"
 	"github.com/ethereum/go-ethereum/accounts/abi"
+	// "github.com/ethereum/go-ethereum/crypto"
 	"io"
 	"io/ioutil"
 	"os"
@@ -21,37 +22,88 @@ var setting = struct {
 	ABI      string `json:"abi"`
 }{}
 
-func makeBasicControlsPage() ui.Control {
+func makeTransferPage() ui.Control {
 	vbox := ui.NewVerticalBox()
 	vbox.SetPadded(true)
+	// 添加发起方
+	//senderhbox := ui.NewHorizontalBox()
+	//senderhbox.SetPadded(false)
+	//vbox.Append(senderhbox, false)
+	//
+	//_, err := crypto.HexToECDSA(setting.PrivKey)
+	//if err != nil {
+	//	msg.SetText("解析配置中的私钥出错"+err.Error())
+	//}
+	//
+	//sender := ui.NewEntry()
+	//
+	//sender.SetText("0xd2a58c88c60593b5af1ec177b7cea838d261fd0d")
+	//sender.SetReadOnly(true)
+	//senderhbox.Append(ui.NewLabel("sender:   "), false)
+	//senderhbox.Append(sender, true)
 
-	hbox := ui.NewHorizontalBox()
-	hbox.SetPadded(true)
-	vbox.Append(hbox, false)
 
-	hbox.Append(ui.NewButton("Button"), false)
-	hbox.Append(ui.NewCheckbox("Checkbox"), false)
+	// 添加接收方
+	tohbox := ui.NewHorizontalBox()
+	tohbox.SetPadded(true)
+	vbox.Append(tohbox, false)
+	to := ui.NewEntry()
+	tohbox.Append(ui.NewLabel("to:           "), false)
+	tohbox.Append(to, true)
 
-	vbox.Append(ui.NewLabel("This is a label. Right now, labels can only span one line."), false)
+	// 添加金额
+	amounthbox := ui.NewHorizontalBox()
+	amounthbox.SetPadded(true)
+	vbox.Append(amounthbox, false)
+	amount := ui.NewEntry()
+	amounthbox.Append(ui.NewLabel("amount:  "), false)
+	amounthbox.Append(amount, true)
 
+	// 选择币种类型
+	currecyhbox := ui.NewHorizontalBox()
+	currecyhbox.SetPadded(true)
+	vbox.Append(currecyhbox, false)
+	cbox := ui.NewCombobox()
+	cbox.Append("VET")
+	cbox.Append("VTHO")
+	cbox.Append("ERC20")
+	currecyhbox.Append(ui.NewLabel("currency type:"), false)
+	currecyhbox.Append(cbox, false)
+
+	// 选择币种类型
+	erc20Addr := ui.NewEntry()
+	currecyhbox.Append(ui.NewLabel("token address:"), false)
+	currecyhbox.Append(erc20Addr, true)
+
+	// 设置费用
+	spinbox := ui.NewSpinbox(0, 255)
+	slider := ui.NewSlider(0, 255)
+
+	spinbox.OnChanged(func(*ui.Spinbox) {
+		slider.SetValue(spinbox.Value())
+	})
+	slider.OnChanged(func(*ui.Slider) {
+		spinbox.SetValue(slider.Value())
+	})
+	gashbox := ui.NewHorizontalBox()
+	gashbox.SetPadded(true)
+	vbox.Append(gashbox, false)
+	gashbox.Append(ui.NewLabel("fee:        "), false)
+	gashbox.Append(slider, false)
+	gashbox.Append(spinbox, false)
+
+
+	txBtn := ui.NewButton("转账")
+	txBtn.OnClicked(func(*ui.Button) {
+
+	})
+	vbox.Append(txBtn, true)
 	vbox.Append(ui.NewHorizontalSeparator(), false)
 
-	group := ui.NewGroup("Entries")
-	group.SetMargined(true)
-	vbox.Append(group, true)
-
-	group.SetChild(ui.NewNonWrappingMultilineEntry())
-
-	entryForm := ui.NewForm()
-	entryForm.SetPadded(true)
-	group.SetChild(entryForm)
-
-	entryForm.Append("Entry", ui.NewEntry(), false)
-	entryForm.Append("Password Entry", ui.NewPasswordEntry(), false)
-	entryForm.Append("Search Entry", ui.NewSearchEntry(), false)
-	entryForm.Append("Multiline Entry", ui.NewMultilineEntry(), true)
-	entryForm.Append("Multiline Entry No Wrap", ui.NewNonWrappingMultilineEntry(), true)
-
+	//
+	oplog := ui.NewMultilineEntry()
+	oplog.SetReadOnly(true)
+	vbox.Append(oplog, true)
 	return vbox
 }
 
@@ -371,7 +423,8 @@ func setupUI() {
 	mainwin.SetChild(tab)
 	mainwin.SetMargined(true)
 
-	tab.Append("转账", makeBasicControlsPage())
+
+	tab.Append("转账", makeTransferPage())
 	tab.SetMargined(0, true)
 
 	tab.Append("合约", makeNumbersPage())
