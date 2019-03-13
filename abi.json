@@ -1,0 +1,485 @@
+[
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "user",
+        "type": "address"
+      }
+    ],
+    "name": "isDataMaker",
+    "outputs": [
+      {
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "motorNo",
+        "type": "string"
+      },
+      {
+        "name": "brand",
+        "type": "string"
+      },
+      {
+        "name": "modelName",
+        "type": "string"
+      },
+      {
+        "name": "dateOfManuf",
+        "type": "string"
+      },
+      {
+        "name": "hash",
+        "type": "string"
+      },
+      {
+        "name": "extData",
+        "type": "string"
+      }
+    ],
+    "name": "modifyCarStableModel",
+    "outputs": [
+      {
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "user",
+        "type": "address"
+      }
+    ],
+    "name": "removeDataMaker",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "motorNo",
+        "type": "string"
+      }
+    ],
+    "name": "getCarStableModelModifyCnt",
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint8"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "motorNo",
+        "type": "string"
+      },
+      {
+        "name": "brand",
+        "type": "string"
+      },
+      {
+        "name": "modelName",
+        "type": "string"
+      },
+      {
+        "name": "dateOfManuf",
+        "type": "string"
+      },
+      {
+        "name": "hash",
+        "type": "string"
+      },
+      {
+        "name": "extData",
+        "type": "string"
+      }
+    ],
+    "name": "createCarStableModel",
+    "outputs": [
+      {
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "getCarDataCnt",
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint64"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "key",
+        "type": "string"
+      },
+      {
+        "name": "motorNo",
+        "type": "string"
+      },
+      {
+        "name": "sTime",
+        "type": "string"
+      },
+      {
+        "name": "eTime",
+        "type": "string"
+      },
+      {
+        "name": "hash",
+        "type": "string"
+      },
+      {
+        "name": "extData",
+        "type": "string"
+      }
+    ],
+    "name": "createCarVarModel",
+    "outputs": [
+      {
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "getCarStableDataCnt",
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint64"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "key",
+        "type": "string"
+      }
+    ],
+    "name": "getCarVarData",
+    "outputs": [
+      {
+        "name": "exist",
+        "type": "bool"
+      },
+      {
+        "name": "motorNo",
+        "type": "string"
+      },
+      {
+        "name": "updateStartTime",
+        "type": "string"
+      },
+      {
+        "name": "updateEndTime",
+        "type": "string"
+      },
+      {
+        "name": "hash",
+        "type": "string"
+      },
+      {
+        "name": "modifyCnt",
+        "type": "uint8"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "user",
+        "type": "address"
+      }
+    ],
+    "name": "addDataMaker",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "currentOwner",
+    "outputs": [
+      {
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "getCarVarDataCnt",
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint64"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "motorNo",
+        "type": "string"
+      }
+    ],
+    "name": "getCarStableData",
+    "outputs": [
+      {
+        "name": "exist",
+        "type": "bool"
+      },
+      {
+        "name": "brand",
+        "type": "string"
+      },
+      {
+        "name": "modelName",
+        "type": "string"
+      },
+      {
+        "name": "dateOfManuf",
+        "type": "string"
+      },
+      {
+        "name": "hash",
+        "type": "string"
+      },
+      {
+        "name": "modifyCnt",
+        "type": "uint8"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "ifce",
+        "type": "address"
+      }
+    ],
+    "name": "setExtCarDataInterface",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "newOwner",
+        "type": "address"
+      }
+    ],
+    "name": "transferOwnership",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "name": "user",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "name": "motorNo",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "name": "hash",
+        "type": "string"
+      }
+    ],
+    "name": "CreateCarStableModel",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "name": "user",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "name": "motorNo",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "name": "oldHash",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "name": "newHash",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "name": "cnt",
+        "type": "uint8"
+      }
+    ],
+    "name": "ModifyCarStableModel",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "name": "user",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "name": "key",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "name": "motorNo",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "name": "hash",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "name": "sTime",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "name": "eTime",
+        "type": "string"
+      }
+    ],
+    "name": "CreateCarVarModel",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "name": "previousOwner",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "name": "newOwner",
+        "type": "address"
+      }
+    ],
+    "name": "OwnershipTransfer",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "name": "user",
+        "type": "address"
+      }
+    ],
+    "name": "DataMakerAdd",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "name": "user",
+        "type": "address"
+      }
+    ],
+    "name": "DataMakerDel",
+    "type": "event"
+  }
+]
