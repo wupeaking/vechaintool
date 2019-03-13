@@ -123,15 +123,14 @@ func makeContractPage() ui.Control {
 
 	callBtn := ui.NewButton("call")
 	callResult := ui.NewMultilineEntry()
-	callResult.Append("1\n")
-	callResult.Append("2")
 
 	callBtn.OnClicked(func(button *ui.Button) {
 		//todo:: 调用视图函数
-		fmt.Println(curViewFuncName)
+		args := make([]string, 0, len(callEntrys))
 		for i := range callEntrys {
-			fmt.Println(callEntrys[i].Text())
+			args = append(args, callEntrys[i].Text())
 		}
+		control.ViewFuncCall(curViewFuncName, args, callResult)
 	})
 	vbox.Append(callBtn, false)
 	vbox.Append(callResult, false)
@@ -176,8 +175,6 @@ func makeContractPage() ui.Control {
 
 	txBtn := ui.NewButton("start transact")
 	txResult := ui.NewMultilineEntry()
-	txResult.Append("1\n")
-	txResult.Append("2")
 
 	txBtn.OnClicked(func(button *ui.Button) {
 		//todo:: 调用视图函数
