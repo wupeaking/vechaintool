@@ -107,11 +107,13 @@ func makeTransferPage() ui.Control {
 	return vbox
 }
 
-func makeNumbersPage() ui.Control {
+
+// 合约函数调用页
+func makeContractPage() ui.Control {
 	hbox := ui.NewHorizontalBox()
 	hbox.SetPadded(true)
 
-	group := ui.NewGroup("Numbers")
+	group := ui.NewGroup("view function")
 	group.SetMargined(true)
 	hbox.Append(group, true)
 
@@ -119,50 +121,78 @@ func makeNumbersPage() ui.Control {
 	vbox.SetPadded(true)
 	group.SetChild(vbox)
 
-	spinbox := ui.NewSpinbox(0, 100)
-	slider := ui.NewSlider(0, 100)
-	pbar := ui.NewProgressBar()
-	spinbox.OnChanged(func(*ui.Spinbox) {
-		slider.SetValue(spinbox.Value())
-		pbar.SetValue(spinbox.Value())
+	viewbox := ui.NewCombobox()
+	viewbox.Append("VET")
+	viewbox.Append("VTHO")
+	viewbox.Append("ERC20")
+	vbox.Append(viewbox, false)
+
+	// todo:: 添加参数列表
+	argsGroup := ui.NewGroup("args list")
+	vbox.Append(argsGroup, false)
+
+
+	entryForm := ui.NewForm()
+	entryForm.SetPadded(true)
+	privKeyEntry := ui.NewPasswordEntry()
+	contractEntry := ui.NewEntry()
+	rpcEntry := ui.NewEntry()
+	entryForm.Append("私钥(十六进制格式)", privKeyEntry, false)
+	entryForm.Append("智能合约地址", contractEntry, false)
+	entryForm.Append("唯链客户端地址", rpcEntry, false)
+	argsGroup.SetChild(entryForm)
+	callBtn := ui.NewButton("call")
+	callResult := ui.NewMultilineEntry()
+	callResult.Append("1\n")
+	callResult.Append("2")
+
+	callBtn.OnClicked(func(button *ui.Button) {
+		//todo:: 调用视图函数
 	})
-	slider.OnChanged(func(*ui.Slider) {
-		spinbox.SetValue(slider.Value())
-		pbar.SetValue(slider.Value())
+	vbox.Append(callBtn, false)
+
+	vbox.Append(callResult, false)
+
+	//------------- 状态函数
+
+	statusGroup := ui.NewGroup("status function")
+	statusGroup.SetMargined(true)
+	hbox.Append(statusGroup, true)
+
+	statusVbox := ui.NewVerticalBox()
+	statusVbox.SetPadded(true)
+	statusGroup.SetChild(statusVbox)
+
+	statusviewbox := ui.NewCombobox()
+	statusviewbox.Append("VET")
+	statusviewbox.Append("VTHO")
+	statusviewbox.Append("ERC20")
+	statusVbox.Append(statusviewbox, false)
+
+	// todo:: 添加参数列表
+	statusArgsGroup := ui.NewGroup("args list")
+	statusVbox.Append(statusArgsGroup, false)
+
+	statusForm := ui.NewForm()
+	statusForm.SetPadded(true)
+	statusForm.Append("私钥(十六进制格式)", ui.NewEntry(), false)
+	statusForm.Append("智能合约地址", ui.NewEntry(), false)
+	statusForm.Append("唯链客户端地址", ui.NewEntry(), false)
+	statusArgsGroup.SetChild(statusForm)
+
+
+	txBtn := ui.NewButton("start transact")
+	txResult := ui.NewMultilineEntry()
+	txResult.Append("1\n")
+	txResult.Append("2")
+
+	txBtn.OnClicked(func(button *ui.Button) {
+		//todo:: 调用视图函数
 	})
-	vbox.Append(spinbox, false)
-	vbox.Append(slider, false)
-	vbox.Append(pbar, false)
+	statusVbox.Append(txBtn, false)
 
-	ip := ui.NewProgressBar()
-	ip.SetValue(-1)
-	vbox.Append(ip, false)
+	statusVbox.Append(txResult, false)
 
-	group = ui.NewGroup("Lists")
-	group.SetMargined(true)
-	hbox.Append(group, true)
-
-	vbox = ui.NewVerticalBox()
-	vbox.SetPadded(true)
-	group.SetChild(vbox)
-
-	cbox := ui.NewCombobox()
-	cbox.Append("Combobox Item 1")
-	cbox.Append("Combobox Item 2")
-	cbox.Append("Combobox Item 3")
-	vbox.Append(cbox, false)
-
-	ecbox := ui.NewEditableCombobox()
-	ecbox.Append("Editable Item 1")
-	ecbox.Append("Editable Item 2")
-	ecbox.Append("Editable Item 3")
-	vbox.Append(ecbox, false)
-
-	rb := ui.NewRadioButtons()
-	rb.Append("Radio Button 1")
-	rb.Append("Radio Button 2")
-	rb.Append("Radio Button 3")
-	vbox.Append(rb, false)
 
 	return hbox
 }
@@ -427,7 +457,7 @@ func setupUI() {
 	tab.Append("转账", makeTransferPage())
 	tab.SetMargined(0, true)
 
-	tab.Append("合约", makeNumbersPage())
+	tab.Append("合约", makeContractPage())
 	tab.SetMargined(1, true)
 
 	tab.Append("编码", makeDataChoosersPage())
