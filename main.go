@@ -43,6 +43,18 @@ func makeTransferPage() ui.Control {
 	currecyhbox.Append(ui.NewLabel("currency type:"), false)
 	currecyhbox.Append(cbox, false)
 
+	currecy := ""
+	cbox.OnSelected(func(combobox *ui.Combobox) {
+		switch combobox.Selected() {
+		case 0:
+			currecy = "VET"
+		case 1:
+			currecy = "VTHO"
+		case 2:
+			currecy = "ERC20"
+		}
+	})
+
 	// 选择币种类型
 	erc20Addr := ui.NewEntry()
 	currecyhbox.Append(ui.NewLabel("token address:"), false)
@@ -61,21 +73,21 @@ func makeTransferPage() ui.Control {
 	gashbox := ui.NewHorizontalBox()
 	gashbox.SetPadded(true)
 	vbox.Append(gashbox, false)
-	gashbox.Append(ui.NewLabel("fee:        "), false)
+	gashbox.Append(ui.NewLabel("GasPriceCoef:    "), false)
 	gashbox.Append(slider, false)
 	gashbox.Append(spinbox, false)
 
 	txBtn := ui.NewButton("转账")
-	txBtn.OnClicked(func(*ui.Button) {
-
-	})
 	vbox.Append(txBtn, true)
 	vbox.Append(ui.NewHorizontalSeparator(), false)
 
-	//
 	oplog := ui.NewMultilineEntry()
 	oplog.SetReadOnly(true)
 	vbox.Append(oplog, true)
+
+	txBtn.OnClicked(func(*ui.Button) {
+		control.Transfer(currecy, amount.Text(), to.Text(), erc20Addr.Text(), oplog)
+	})
 	return vbox
 }
 
