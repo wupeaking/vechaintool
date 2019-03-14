@@ -6,8 +6,6 @@ import (
 	_ "github.com/andlabs/ui/winmanifest"
 	"github.com/wupeaking/vechaintool/control"
 	"github.com/wupeaking/vechaintool/models"
-	"github.com/wupeaking/vechaintool/view"
-
 	// "github.com/ethereum/go-ethereum/crypto"
 )
 
@@ -162,7 +160,7 @@ func makeContractPage() ui.Control {
 		form.SetPadded(true)
 		entrys = entrys[:0]
 		funcIndex := combobox.Selected()
-		if funcIndex >= len(models.Setting.StatusFuncDesc) || funcIndex < 0{
+		if funcIndex >= len(models.Setting.StatusFuncDesc) || funcIndex < 0 {
 			return
 		}
 		curFuncName = models.Setting.StatusFuncDesc[funcIndex].Name
@@ -180,12 +178,12 @@ func makeContractPage() ui.Control {
 
 	txBtn.OnClicked(func(button *ui.Button) {
 		//todo:: 调用视图函数
-		fmt.Println(curFuncName)
+		txResult.SetText("")
+		args := make([]string, 0, len(entrys))
 		for i := range entrys {
-			fmt.Println(entrys[i].Text())
+			args = append(args, entrys[i].Text())
 		}
-		view.ConfirmDialog("确定要发起这边交易吗  确定要发起这边交易吗 确定要发起这边交易吗 确定要发起这边交易吗", func(){}, func() {
-		})
+		control.CallContract(curFuncName, args, txResult)
 	})
 	statusVbox.Append(txBtn, false)
 	statusVbox.Append(txResult, false)
@@ -327,7 +325,7 @@ func makeSettingPage() ui.Control {
 	saveBtn := ui.NewButton("保存配置")
 	saveBtn.OnClicked(func(*ui.Button) {
 		control.SaveSetting(privKeyEntry.Text(), contractEntry.Text(), rpcEntry.Text(), abiEntry.Text(), mainwin)
-		refresh<- struct{}{}
+		refresh <- struct{}{}
 	})
 	btngrid.Append(ui.NewLabel("                                             "),
 		0, 0, 1, 1,
@@ -340,7 +338,7 @@ func makeSettingPage() ui.Control {
 	loadBtn := ui.NewButton("加载配置")
 	loadBtn.OnClicked(func(*ui.Button) {
 		control.LoadSetting(privKeyEntry, contractEntry, rpcEntry, abiEntry, mainwin)
-		refresh<- struct{}{}
+		refresh <- struct{}{}
 	})
 	btngrid.Append(loadBtn,
 		2, 0, 1, 1,

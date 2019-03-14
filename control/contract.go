@@ -7,14 +7,20 @@ import (
 	"fmt"
 	"github.com/andlabs/ui"
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/crypto"
+	"github.com/ethereum/go-ethereum/rlp"
+	"github.com/vechain/thor/thor"
+	"github.com/vechain/thor/tx"
 	"github.com/wupeaking/vechaintool/models"
 	"github.com/wupeaking/vechaintool/vechainclient"
+	"github.com/wupeaking/vechaintool/view"
 	"math/big"
 	"strconv"
+	"time"
 )
 
 // ViewFuncCall 调用视图函数
-func ViewFuncCall(method string, args []string, log *ui.MultilineEntry  ) {
+func ViewFuncCall(method string, args []string, log *ui.MultilineEntry) {
 	if method == "" {
 		log.Append("方法名称不能为空")
 		return
@@ -25,7 +31,6 @@ func ViewFuncCall(method string, args []string, log *ui.MultilineEntry  ) {
 		log.Append("未设置ABI文件")
 		return
 	}
-
 
 	if len(abiObj.Methods[method].Inputs) != len(args) {
 		log.Append("参数个数错误")
@@ -44,7 +49,7 @@ func ViewFuncCall(method string, args []string, log *ui.MultilineEntry  ) {
 		case "uint64":
 			value, err := strconv.ParseUint(args[i], 10, 0)
 			if err != nil {
-				log.Append("字符串转换成数字失败: "+err.Error())
+				log.Append("字符串转换成数字失败: " + err.Error())
 				return
 			} else {
 				argsI = append(argsI, value)
@@ -59,7 +64,7 @@ func ViewFuncCall(method string, args []string, log *ui.MultilineEntry  ) {
 		case "int256":
 			value, ok := new(big.Int).SetString(args[i], 10)
 			if !ok {
-				 log.Append("字符串转换成数字失败")
+				log.Append("字符串转换成数字失败")
 				return
 			} else {
 				argsI = append(argsI, value)
@@ -73,7 +78,7 @@ func ViewFuncCall(method string, args []string, log *ui.MultilineEntry  ) {
 		case "int64":
 			value, err := strconv.ParseInt(args[i], 10, 0)
 			if err != nil {
-				log.Append("字符串转换成数字失败: "+err.Error())
+				log.Append("字符串转换成数字失败: " + err.Error())
 				return
 			} else {
 				argsI = append(argsI, value)
@@ -215,4 +220,183 @@ func ViewFuncCall(method string, args []string, log *ui.MultilineEntry  ) {
 		log.Append(fmt.Sprintf("参数[%d](%s): %v \n", i, arg.Name, string(d)))
 	}
 	return
+}
+
+func CallContract(method string, args []string, log *ui.MultilineEntry) {
+	if method == "" {
+		log.Append("方法名称不能为空")
+		return
+	}
+
+	abiObj := models.Setting.ABIObj()
+	if abiObj == nil {
+		log.Append("未设置ABI文件\n")
+		return
+	}
+	if len(abiObj.Methods[method].Inputs) != len(args) {
+		log.Append("参数个数错误\n")
+		return
+	}
+	if models.Setting.PrivateKey() == nil {
+		log.Append("私钥未设置\n")
+		return
+	}
+	pk := models.Setting.PrivateKey().D.Bytes()
+
+	argsI := make([]interface{}, 0)
+
+	for i, arg := range abiObj.Methods[method].Inputs {
+		switch arg.Type.String() {
+		case "uint8":
+			fallthrough
+		case "uint16":
+			fallthrough
+		case "uint32":
+			fallthrough
+		case "uint64":
+			value, err := strconv.ParseUint(args[i], 10, 0)
+			if err != nil {
+				log.Append("转换数字失败\n")
+				return
+			} else {
+				argsI = append(argsI, value)
+			}
+
+		case "uint128":
+			fallthrough
+		case "uint256":
+			fallthrough
+		case "int128":
+			fallthrough
+		case "int256":
+			value, ok := new(big.Int).SetString(args[i], 10)
+			if !ok {
+				log.Append(fmt.Sprintf("字符串转换成数字失败\n"))
+				return
+			} else {
+				argsI = append(argsI, value)
+			}
+		case "int8":
+			fallthrough
+		case "int16":
+			fallthrough
+		case "int32":
+			fallthrough
+		case "int64":
+			value, err := strconv.ParseInt(args[i], 10, 0)
+			if err != nil {
+				log.Append(fmt.Sprintf("字符串转换成数字失败\n"))
+				return
+			} else {
+				argsI = append(argsI, value)
+			}
+
+		case "bool":
+			if args[i] == "true" {
+				argsI = append(argsI, true)
+			} else if args[i] == "false" {
+				argsI = append(argsI, false)
+			} else {
+				log.Append(fmt.Sprintf("第%d个参数必须是true/false\n", i))
+				return
+			}
+
+		case "address":
+			if len(args[i]) != 42 {
+				log.Append(fmt.Sprintf("第%d个参数必须是以太坊地址\n", i))
+				return
+			}
+
+			b, err := hex.DecodeString(args[i][2:])
+			if err != nil {
+				log.Append(fmt.Sprintf("十六进制字符串解码失败: %s\n", err.Error()))
+				return
+			}
+			var addr [20]byte
+			copy(addr[:], b)
+			argsI = append(argsI, addr)
+
+		default:
+			argsI = append(argsI, args[i])
+		}
+	}
+
+	// 进行编码
+	inputByte, err := abiObj.Pack(method, argsI...)
+	if err != nil {
+		log.Append(fmt.Sprintf("input编码失败: %s\n", err.Error()))
+		return
+	}
+
+	//发起调用
+	veCli, _ := vechain.NewVeChainClient(models.Setting.RPC, "", "", 10)
+	// 获取最新区块
+	blk, err := veCli.BlockInfo(context.Background(), 0)
+	if err != nil {
+		log.Append(fmt.Sprintf("查询区块信息失败: %s\n", err.Error()))
+		return
+	}
+	// 开始构造交易
+	// todo:: gas 暂时设置5000000
+	var chain byte
+	if false {
+		chain = 0x4a
+	} else {
+		chain = 0x27
+	}
+	tid, raw, err := constructRawTx(models.Setting.Contract, pk, uint32(blk.BlockNum),
+		new(big.Int).SetUint64(0), inputByte, 5000000, chain)
+
+	if err != nil {
+		log.Append(fmt.Sprintf("构建原始交易失败: %s\n", err.Error()))
+		return
+	}
+
+	msg := "确认发起此交易?"
+	view.ConfirmDialog(msg, func() {
+		// 开始广播交易
+		_, err = veCli.PushTx(context.Background(), raw)
+		if err != nil {
+			log.Append(fmt.Sprintf("广播交易失败: %s\n", err.Error()))
+			return
+		}
+		log.Append(fmt.Sprintf("交易广播成功, tx_id: %s \n", tid))
+	}, func() {
+		log.Append(fmt.Sprintf("交易取消\n"))
+		return
+	})
+	return
+}
+
+func constructRawTx(to string, prvk []byte, blockNum uint32,
+	amount *big.Int, input []byte, gas uint64, chain byte) (string, string, error) {
+	toAddr, err := thor.ParseAddress(to)
+	if err != nil {
+		return "", "", err
+	}
+	//   chaintag  创世区块ID 最后一个字节 测试链为0x27 生产链为0x4a
+	trx := new(tx.Builder).ChainTag(chain).
+		BlockRef(tx.NewBlockRef(blockNum)).
+		Expiration(720).
+		Clause(tx.NewClause(&toAddr).WithValue(amount).WithData(input)).
+		GasPriceCoef(0).
+		Gas(gas).
+		DependsOn(nil).
+		Nonce(uint64(time.Now().UnixNano())).Build()
+
+	priv, err := crypto.ToECDSA(prvk) //  HexToECDSA(b.Text(16))
+	if err != nil {
+		return "", "", err
+	}
+	sig, err := crypto.Sign(trx.SigningHash().Bytes(), priv)
+	if err != nil {
+		return "", "", err
+	}
+
+	trx = trx.WithSignature(sig)
+	d, err := rlp.EncodeToBytes(trx)
+	if err != nil {
+		return "", "", err
+	}
+	return trx.ID().String(), hex.EncodeToString(d), nil
 }

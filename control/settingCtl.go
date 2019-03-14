@@ -40,7 +40,7 @@ func SaveSetting(privKey, contract, rpc, abiFile string, mainWin *ui.Window) {
 	}
 
 	var bufs []byte
-	if abiFile != ""{
+	if abiFile != "" {
 		// 尝试打开abi文件
 		file, err := os.Open(abiFile)
 		if err != nil {
