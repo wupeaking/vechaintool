@@ -6,6 +6,8 @@ import (
 	_ "github.com/andlabs/ui/winmanifest"
 	"github.com/wupeaking/vechaintool/control"
 	"github.com/wupeaking/vechaintool/models"
+	"github.com/wupeaking/vechaintool/view"
+
 	// "github.com/ethereum/go-ethereum/crypto"
 )
 
@@ -182,6 +184,8 @@ func makeContractPage() ui.Control {
 		for i := range entrys {
 			fmt.Println(entrys[i].Text())
 		}
+		view.ConfirmDialog("确定要发起这边交易吗  确定要发起这边交易吗 确定要发起这边交易吗 确定要发起这边交易吗", func(){}, func() {
+		})
 	})
 	statusVbox.Append(txBtn, false)
 	statusVbox.Append(txResult, false)
