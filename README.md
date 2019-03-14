@@ -26,6 +26,11 @@ GOPROXY=https://goproxy.io go mod download
 go build -o tools main.go
 ```
 
+```shell
+# 如果需要交叉编译
+GOOS=windows GOARCH=amd64 CGO_ENABLED=1 CC=x86_64-w64-mingw32-gcc CXX=x86_64-w64-mingw32-g++ go build -v -o tools.exe main.go
+```
+
 #### 截图
 
 1. 配置页面
@@ -41,3 +46,7 @@ go build -o tools main.go
 ![contract](./img/contract.png)
 
 4. 编码功能
+
+#### 使用示例
+
+<img width=500 src="./img/demogif.gif">
