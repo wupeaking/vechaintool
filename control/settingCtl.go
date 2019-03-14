@@ -3,6 +3,7 @@ package control
 import (
 	"encoding/hex"
 	"encoding/json"
+	"fmt"
 	"github.com/andlabs/ui"
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/wupeaking/vechaintool/models"
@@ -37,6 +38,7 @@ func SaveSetting(privKey, contract, rpc, abiFile string, mainWin *ui.Window) {
 		ui.MsgBoxError(mainWin, "错误提示", "服务器地址格式错误, "+rpc)
 		return
 	}
+
 	var bufs []byte
 	if abiFile != ""{
 		// 尝试打开abi文件
@@ -53,6 +55,10 @@ func SaveSetting(privKey, contract, rpc, abiFile string, mainWin *ui.Window) {
 		file.Seek(0, io.SeekStart)
 		bufs, _ = ioutil.ReadAll(file)
 	}
+	models.Setting.PrivKey = privKey
+	models.Setting.Contract = contract
+	models.Setting.RPC = rpc
+	models.Setting.ABI = string(bufs)
 
 	content, _ := json.Marshal(models.Setting)
 	settingFile, err := os.Create("./.vechain_setting.json")
@@ -65,10 +71,7 @@ func SaveSetting(privKey, contract, rpc, abiFile string, mainWin *ui.Window) {
 		ui.MsgBoxError(mainWin, "错误提示", "保存配置文件出错")
 		return
 	}
-	models.Setting.PrivKey = privKey
-	models.Setting.Contract = contract
-	models.Setting.RPC = rpc
-	models.Setting.ABI = string(bufs)
+
 	if err := models.Setting.Load(); err != nil {
 		ui.MsgBoxError(mainWin, "错误提示", "保存配置出错: "+err.Error())
 		return
@@ -131,5 +134,7 @@ func TryLoadSetting(privKeyEntry, contractEntry, rpcEntry, abiEntry *ui.Entry, m
 	privKeyEntry.SetText(models.Setting.PrivKey)
 	contractEntry.SetText(models.Setting.Contract)
 	rpcEntry.SetText(models.Setting.RPC)
-	models.Setting.Load()
+	if err := models.Setting.Load(); err != nil {
+		fmt.Println("load err: ", err.Error())
+	}
 }

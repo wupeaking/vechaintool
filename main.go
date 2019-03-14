@@ -125,7 +125,7 @@ func makeContractPage() ui.Control {
 	callResult := ui.NewMultilineEntry()
 
 	callBtn.OnClicked(func(button *ui.Button) {
-		//todo:: 调用视图函数
+		callResult.SetText("")
 		args := make([]string, 0, len(callEntrys))
 		for i := range callEntrys {
 			args = append(args, callEntrys[i].Text())

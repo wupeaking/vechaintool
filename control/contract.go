@@ -183,11 +183,11 @@ func ViewFuncCall(method string, args []string, log *ui.MultilineEntry  ) {
 
 		case "address":
 			var addr common.Address
-			retI = append(argsI, &addr)
+			retI = append(retI, &addr)
 
 		default:
 			var tmp string
-			retI = append(argsI, &tmp)
+			retI = append(retI, &tmp)
 		}
 	}
 
@@ -211,7 +211,8 @@ func ViewFuncCall(method string, args []string, log *ui.MultilineEntry  ) {
 	}
 
 	for i, arg := range abiObj.Methods[method].Outputs {
-		log.Append(fmt.Sprintf("参数[%d](%s): %v \n", i, arg.Name, retI[i]))
+		d, _ := json.Marshal(retI[i])
+		log.Append(fmt.Sprintf("参数[%d](%s): %v \n", i, arg.Name, string(d)))
 	}
 	return
 }
