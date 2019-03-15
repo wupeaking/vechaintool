@@ -4,7 +4,7 @@
 #### 源码编译
 
 ##### 要求
-- Go > 1.11
+- Go >= 1.11
 
 ##### 克隆项目
 
@@ -46,6 +46,9 @@ GOOS=windows GOARCH=amd64 CGO_ENABLED=1 CC=x86_64-w64-mingw32-gcc CXX=x86_64-w64
 ![contract](./img/contract.png)
 
 4. 编码功能
+
+![contract](./img/encode.png)
+
 
 #### 使用示例
 

@@ -236,6 +236,7 @@ func makeEncodingPage() ui.Control {
 
 	base64Encode := ui.NewButton("b64 encode")
 	base64Encode.OnClicked(func(*ui.Button) {
+		control.Base64Encode(strEntry.Text(), log)
 	})
 
 	base64Decode := ui.NewButton("b64 decode")
