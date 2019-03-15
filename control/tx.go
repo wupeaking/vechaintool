@@ -22,28 +22,28 @@ import (
 
 func Transfer(currecy, amount, to, contract string, log *ui.MultilineEntry) {
 	if currecy == "" {
-		log.Append("未选择正确的货币类型\n")
+		log.Append("The correct currency type was not selected\n")
 		return
 	}
 
 	value, ok := new(big.Int).SetString(amount, 0)
 	if !ok {
-		log.Append("发起金额格式异常\n")
+		log.Append("amount format exception\n")
 		return
 	}
 
 	if models.Setting.Addr.String() == "" {
-		log.Append("未设置私钥\n")
+		log.Append("Private key not set\n")
 		return
 	}
 
 	if len(to) != 42 {
-		log.Append("接收方地址错误\n")
+		log.Append("Receiver address error\n")
 		return
 	}
 
 	if strings.ToLower(currecy) == "erc20" && len(contract) != 42 {
-		log.Append("ERC20未填写合约地址\n")
+		log.Append("not fill in the contract address\n")
 		return
 	}
 
@@ -57,19 +57,19 @@ func Transfer(currecy, amount, to, contract string, log *ui.MultilineEntry) {
 
 	gasUsed, err := calcTransferGasUsed(currecy, value, veCli, contract)
 	if err != nil {
-		log.Append(fmt.Sprintf("模拟计算gas出错, err: %s\n", err.Error()))
+		log.Append(fmt.Sprintf("Analog calculation gas error, err: %s\n", err.Error()))
 		return
 	}
 
 	allVtho, err := queryBalance("vtho", models.Setting.Addr.String(), contract, veCli)
 	if err != nil {
-		log.Append(fmt.Sprintf("查询vtho余额出错, err: %s\n", err.Error()))
+		log.Append(fmt.Sprintf("querying the balance of vtho failed, err: %s\n", err.Error()))
 		return
 	}
 	// gas --> vtho(wei)  (gas/1000)*10^18=gas*10^15
 	totalUsedVtho := new(big.Int).Mul(big.NewInt(int64(gasUsed)), big.NewInt(10e15))
 	if allVtho.Cmp(totalUsedVtho) < 0 {
-		log.Append(fmt.Sprintf("vtho不足以支付矿工费用\n"))
+		log.Append(fmt.Sprintf("Vtho is not enough to pay for miners\n"))
 		return
 	}
 
@@ -78,22 +78,23 @@ func Transfer(currecy, amount, to, contract string, log *ui.MultilineEntry) {
 		contract, to, gasUsed, value)
 
 	if err != nil {
-		log.Append(fmt.Sprintf("构造原始交易出错: %s\n", err.Error()))
+		log.Append(fmt.Sprintf("Constructing the original transaction error: %s\n", err.Error()))
 		return
 	}
 
-	msg := fmt.Sprintf("确认向%s注入%s币的数量: %s, 此交易将花费Gas: %d", to, currecy, value.String(), gasUsed)
+	msg := fmt.Sprintf("Confirm sending  %s %s to %s, This transaction will cost Gas: %d",
+		value.String(), currecy, to, gasUsed)
 	view.ConfirmDialog(msg, func() {
 		// 广播交易
 		txid, err := veCli.PushTx(context.Background(), rawTx)
 		if err != nil {
-			log.Append(fmt.Sprintf("广播交易失败: %s\n", err.Error()))
+			log.Append(fmt.Sprintf("Broadcast transaction failed: %s\n", err.Error()))
 			return
 		}
-		log.Append(fmt.Sprintf("交易已发起, tx_id: %s\n", txid))
+		log.Append(fmt.Sprintf("Broadcast transaction success, tx_id: %s\n", txid))
 		return
 	}, func() {
-		log.Append(fmt.Sprintf("取消了此处交易\n"))
+		log.Append(fmt.Sprintf("cancel transaction\n"))
 		return
 	})
 	return

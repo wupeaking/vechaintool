@@ -77,7 +77,7 @@ func makeTransferPage() ui.Control {
 	gashbox.Append(slider, false)
 	gashbox.Append(spinbox, false)
 
-	txBtn := ui.NewButton("转账")
+	txBtn := ui.NewButton("transfer")
 	vbox.Append(txBtn, true)
 	vbox.Append(ui.NewHorizontalSeparator(), false)
 
@@ -292,7 +292,7 @@ func makeSettingPage() ui.Control {
 	vbox := ui.NewVerticalBox()
 	vbox.SetPadded(true)
 
-	group := ui.NewGroup("设置列表")
+	group := ui.NewGroup("setting list")
 	group.SetMargined(true)
 	vbox.Append(group, false)
 
@@ -305,21 +305,21 @@ func makeSettingPage() ui.Control {
 	privKeyEntry := ui.NewPasswordEntry()
 	contractEntry := ui.NewEntry()
 	rpcEntry := ui.NewEntry()
-	entryForm.Append("私钥(十六进制格式)", privKeyEntry, false)
-	entryForm.Append("智能合约地址", contractEntry, false)
-	entryForm.Append("唯链客户端地址", rpcEntry, false)
+	entryForm.Append("private key(hex)", privKeyEntry, false)
+	entryForm.Append("contract address", contractEntry, false)
+	entryForm.Append("vechain rpc", rpcEntry, false)
 
 	grid := ui.NewGrid()
 	grid.SetPadded(true)
 	entryForm.Append("", grid, false)
 
-	abiBtn := ui.NewButton("打开ABI文件")
+	abiBtn := ui.NewButton("open abi file")
 	abiEntry := ui.NewEntry()
 	abiEntry.SetReadOnly(true)
 	abiBtn.OnClicked(func(*ui.Button) {
 		filename := ui.OpenFile(mainwin)
 		if filename == "" {
-			filename = "未选择"
+			filename = "unselected"
 		}
 		abiEntry.SetText(filename)
 	})
@@ -340,7 +340,7 @@ func makeSettingPage() ui.Control {
 		0, 0, 2, 1,
 		false, ui.AlignCenter, false, ui.AlignStart)
 
-	saveBtn := ui.NewButton("保存配置")
+	saveBtn := ui.NewButton("save setting")
 	saveBtn.OnClicked(func(*ui.Button) {
 		control.SaveSetting(privKeyEntry.Text(), contractEntry.Text(), rpcEntry.Text(), abiEntry.Text(), mainwin)
 		refresh <- struct{}{}
@@ -350,7 +350,7 @@ func makeSettingPage() ui.Control {
 		0, 0, 1, 1,
 		false, ui.AlignFill, false, ui.AlignFill)
 
-	loadBtn := ui.NewButton("加载配置")
+	loadBtn := ui.NewButton("load setting")
 	loadBtn.OnClicked(func(*ui.Button) {
 		control.LoadSetting(privKeyEntry, contractEntry, rpcEntry, abiEntry, mainwin)
 		refresh <- struct{}{}
@@ -364,7 +364,7 @@ func makeSettingPage() ui.Control {
 }
 
 func setupUI() {
-	mainwin = ui.NewWindow("唯链调试小工具", 640, 480, true)
+	mainwin = ui.NewWindow("vechain smart contract tools", 640, 480, true)
 	mainwin.OnClosing(func(*ui.Window) bool {
 		ui.Quit()
 		return true
@@ -377,16 +377,16 @@ func setupUI() {
 	mainwin.SetChild(tab)
 	mainwin.SetMargined(true)
 
-	tab.Append("设置", makeSettingPage())
+	tab.Append("setting", makeSettingPage())
 	tab.SetMargined(0, true)
 
-	tab.Append("转账", makeTransferPage())
+	tab.Append("transfer", makeTransferPage())
 	tab.SetMargined(1, true)
 
-	tab.Append("合约", makeContractPage())
+	tab.Append("contract", makeContractPage())
 	tab.SetMargined(2, true)
 
-	tab.Append("编码", makeEncodingPage())
+	tab.Append("encoding", makeEncodingPage())
 	tab.SetMargined(3, true)
 
 	go func() {
@@ -395,7 +395,7 @@ func setupUI() {
 			case <-refresh:
 				ui.QueueMain(func() {
 					tab.Delete(2)
-					tab.InsertAt("合约", 2, makeContractPage())
+					tab.InsertAt("contract", 2, makeContractPage())
 				})
 			}
 		}
