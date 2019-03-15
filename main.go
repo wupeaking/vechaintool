@@ -224,16 +224,19 @@ func makeEncodingPage() ui.Control {
 		control.ABIUnPack(strEntry.Text(), log)
 	})
 
-	signBtn := ui.NewButton("signature")
+	signBtn := ui.NewButton("secp256k1 signature")
 	signBtn.OnClicked(func(*ui.Button) {
+		control.Signature(strEntry.Text(), log)
 	})
 
 	hash256Btn := ui.NewButton("SHA256")
 	hash256Btn.OnClicked(func(*ui.Button) {
+		control.Sha256(strEntry.Text(), log)
 	})
 
 	keccak256Btn := ui.NewButton("Keccak256")
 	keccak256Btn.OnClicked(func(*ui.Button) {
+		control.Keccak256Hash(strEntry.Text(), log)
 	})
 
 	base64Encode := ui.NewButton("b64 encode")
