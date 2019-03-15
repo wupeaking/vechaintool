@@ -189,7 +189,6 @@ func makeContractPage() ui.Control {
 	txResult := ui.NewMultilineEntry()
 
 	txBtn.OnClicked(func(button *ui.Button) {
-		//todo:: 调用视图函数
 		txResult.SetText("")
 		args := make([]string, 0, len(entrys))
 		for i := range entrys {
@@ -203,89 +202,67 @@ func makeContractPage() ui.Control {
 }
 
 func makeEncodingPage() ui.Control {
-	hbox := ui.NewHorizontalBox()
-	hbox.SetPadded(true)
-
 	vbox := ui.NewVerticalBox()
 	vbox.SetPadded(true)
-	hbox.Append(vbox, false)
-
-	vbox.Append(ui.NewDatePicker(), false)
-	vbox.Append(ui.NewTimePicker(), false)
-	vbox.Append(ui.NewDateTimePicker(), false)
-	vbox.Append(ui.NewFontButton(), false)
-	vbox.Append(ui.NewColorButton(), false)
-
-	hbox.Append(ui.NewVerticalSeparator(), false)
-
-	vbox = ui.NewVerticalBox()
-	vbox.SetPadded(true)
-	hbox.Append(vbox, true)
 
 	grid := ui.NewGrid()
 	grid.SetPadded(true)
 	vbox.Append(grid, false)
+	log := ui.NewMultilineEntry()
+	log.SetReadOnly(true)
 
-	button := ui.NewButton("Open File")
-	entry := ui.NewEntry()
-	entry.SetReadOnly(true)
-	button.OnClicked(func(*ui.Button) {
-		filename := ui.OpenFile(mainwin)
-		if filename == "" {
-			filename = "(cancelled)"
-		}
-		entry.SetText(filename)
+	// ABI 编码字符串
+	strEntry := ui.NewMultilineEntry()
+
+	abiEncodeBtn := ui.NewButton("ABI encode")
+	abiEncodeBtn.OnClicked(func(*ui.Button) {
 	})
-	grid.Append(button,
-		0, 0, 1, 1,
-		false, ui.AlignFill, false, ui.AlignFill)
-	grid.Append(entry,
+
+	abiDecodeBtn := ui.NewButton("ABI decode")
+	abiDecodeBtn.OnClicked(func(*ui.Button) {
+	})
+
+	signBtn := ui.NewButton("signature")
+	signBtn.OnClicked(func(*ui.Button) {
+	})
+
+	hash256Btn := ui.NewButton("SHA256")
+	hash256Btn.OnClicked(func(*ui.Button) {
+	})
+
+	keccak256Btn := ui.NewButton("Keccak256")
+	keccak256Btn.OnClicked(func(*ui.Button) {
+	})
+
+	grid.Append(strEntry,
+		0, 0, 2, 5,
+		true, ui.AlignFill, true, ui.AlignFill)
+	grid.Append(abiEncodeBtn,
 		1, 0, 1, 1,
-		true, ui.AlignFill, false, ui.AlignFill)
+		true, ui.AlignFill, true, ui.AlignFill)
 
-	button = ui.NewButton("Save File")
-	entry2 := ui.NewEntry()
-	entry2.SetReadOnly(true)
-	button.OnClicked(func(*ui.Button) {
-		filename := ui.SaveFile(mainwin)
-		if filename == "" {
-			filename = "(cancelled)"
-		}
-		entry2.SetText(filename)
-	})
-	grid.Append(button,
-		0, 1, 1, 1,
-		false, ui.AlignFill, false, ui.AlignFill)
-	grid.Append(entry2,
+	grid.Append(abiDecodeBtn,
 		1, 1, 1, 1,
-		true, ui.AlignFill, false, ui.AlignFill)
+		true, ui.AlignFill, true, ui.AlignFill)
 
-	msggrid := ui.NewGrid()
-	msggrid.SetPadded(true)
-	grid.Append(msggrid,
-		0, 2, 2, 1,
-		false, ui.AlignCenter, false, ui.AlignStart)
+	grid.Append(signBtn,
+		1, 2, 1, 1,
+		true, ui.AlignFill, true, ui.AlignFill)
 
-	button = ui.NewButton("Message Box")
-	button.OnClicked(func(*ui.Button) {
-		ui.MsgBox(mainwin,
-			"This is a normal message box.",
-			"More detailed information can be shown here.")
-	})
-	msggrid.Append(button,
-		0, 0, 1, 1,
-		false, ui.AlignFill, false, ui.AlignFill)
-	button = ui.NewButton("Error Box")
-	button.OnClicked(func(*ui.Button) {
-		ui.MsgBoxError(mainwin,
-			"This message box describes an error.",
-			"More detailed information can be shown here.")
-	})
-	msggrid.Append(button,
-		1, 0, 1, 1,
-		false, ui.AlignFill, false, ui.AlignFill)
+	grid.Append(hash256Btn,
+		1, 3, 1, 1,
+		true, ui.AlignFill, true, ui.AlignFill)
 
-	return hbox
+	grid.Append(keccak256Btn,
+		1, 4, 1, 1,
+		true, ui.AlignFill, true, ui.AlignFill)
+
+	vbox.Append(ui.NewHorizontalSeparator(), false)
+
+
+	vbox.Append(log,  true)
+
+	return vbox
 }
 
 func makeSettingPage() ui.Control {
@@ -331,20 +308,23 @@ func makeSettingPage() ui.Control {
 		true, ui.AlignFill, false, ui.AlignFill)
 
 	btngrid := ui.NewGrid()
-	// btngrid.SetPadded(true)
-	vbox.Append(btngrid, false)
+	btngrid.SetPadded(true)
+	vbox.Append(btngrid, true)
+
+	msgGrid := ui.NewGrid()
+	msgGrid.SetPadded(true)
+	btngrid.Append(msgGrid,
+		0, 0, 2, 1,
+		false, ui.AlignCenter, false, ui.AlignStart)
 
 	saveBtn := ui.NewButton("保存配置")
 	saveBtn.OnClicked(func(*ui.Button) {
 		control.SaveSetting(privKeyEntry.Text(), contractEntry.Text(), rpcEntry.Text(), abiEntry.Text(), mainwin)
 		refresh <- struct{}{}
 	})
-	btngrid.Append(ui.NewLabel("                                             "),
-		0, 0, 1, 1,
-		false, ui.AlignFill, false, ui.AlignFill)
 
-	btngrid.Append(saveBtn,
-		1, 0, 1, 1,
+	msgGrid.Append(saveBtn,
+		0, 0, 1, 1,
 		false, ui.AlignFill, false, ui.AlignFill)
 
 	loadBtn := ui.NewButton("加载配置")
@@ -352,8 +332,8 @@ func makeSettingPage() ui.Control {
 		control.LoadSetting(privKeyEntry, contractEntry, rpcEntry, abiEntry, mainwin)
 		refresh <- struct{}{}
 	})
-	btngrid.Append(loadBtn,
-		2, 0, 1, 1,
+	msgGrid.Append(loadBtn,
+		1, 0, 1, 1,
 		false, ui.AlignFill, false, ui.AlignFill)
 
 	control.TryLoadSetting(privKeyEntry, contractEntry, rpcEntry, abiEntry, mainwin)
