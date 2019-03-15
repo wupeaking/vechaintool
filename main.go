@@ -216,10 +216,12 @@ func makeEncodingPage() ui.Control {
 
 	abiEncodeBtn := ui.NewButton("ABI encode")
 	abiEncodeBtn.OnClicked(func(*ui.Button) {
+		control.ABIPack(strEntry.Text(), log)
 	})
 
 	abiDecodeBtn := ui.NewButton("ABI decode")
 	abiDecodeBtn.OnClicked(func(*ui.Button) {
+		control.ABIUnPack(strEntry.Text(), log)
 	})
 
 	signBtn := ui.NewButton("signature")
@@ -241,6 +243,7 @@ func makeEncodingPage() ui.Control {
 
 	base64Decode := ui.NewButton("b64 decode")
 	base64Decode.OnClicked(func(*ui.Button) {
+		control.Base64Decode(strEntry.Text(), log)
 	})
 
 	grid.Append(strEntry,
