@@ -234,8 +234,16 @@ func makeEncodingPage() ui.Control {
 	keccak256Btn.OnClicked(func(*ui.Button) {
 	})
 
+	base64Encode := ui.NewButton("b64 encode")
+	base64Encode.OnClicked(func(*ui.Button) {
+	})
+
+	base64Decode := ui.NewButton("b64 decode")
+	base64Decode.OnClicked(func(*ui.Button) {
+	})
+
 	grid.Append(strEntry,
-		0, 0, 2, 5,
+		0, 0, 2, 7,
 		true, ui.AlignFill, true, ui.AlignFill)
 	grid.Append(abiEncodeBtn,
 		1, 0, 1, 1,
@@ -255,6 +263,14 @@ func makeEncodingPage() ui.Control {
 
 	grid.Append(keccak256Btn,
 		1, 4, 1, 1,
+		true, ui.AlignFill, true, ui.AlignFill)
+
+	grid.Append(base64Encode,
+		1, 5, 1, 1,
+		true, ui.AlignFill, true, ui.AlignFill)
+
+	grid.Append(base64Decode,
+		1, 6, 1, 1,
 		true, ui.AlignFill, true, ui.AlignFill)
 
 	vbox.Append(ui.NewHorizontalSeparator(), false)
