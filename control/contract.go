@@ -13,7 +13,7 @@ import (
 	"github.com/vechain/thor/tx"
 	"github.com/wupeaking/vechaintool/models"
 	"github.com/wupeaking/vechaintool/vechainclient"
-	"github.com/wupeaking/vechaintool/view"
+	"github.com/wupeaking/vechaintool/widget"
 	"math/big"
 	"strconv"
 	"time"
@@ -205,7 +205,11 @@ func ViewFuncCall(method string, args []string, log *ui.MultilineEntry) {
 		}
 		arg := abiObj.Methods[method].Outputs[0]
 		data, _ := json.Marshal(ret)
-		log.Append(fmt.Sprintf("args[%d](%s): %v \n", 0, arg.Name, string(data)))
+		if arg.Name == "" {
+			log.Append(fmt.Sprintf("results[%d]: %v \n", 0, string(data)))
+		} else {
+			log.Append(fmt.Sprintf("results[%d](%s): %v \n", 0, arg.Name, string(data)))
+		}
 		return
 	}
 
@@ -217,7 +221,11 @@ func ViewFuncCall(method string, args []string, log *ui.MultilineEntry) {
 
 	for i, arg := range abiObj.Methods[method].Outputs {
 		d, _ := json.Marshal(retI[i])
-		log.Append(fmt.Sprintf("args[%d](%s): %v \n", i, arg.Name, string(d)))
+		if arg.Name == "" {
+			log.Append(fmt.Sprintf("results[%d]: %v \n", i, string(d)))
+		} else {
+			log.Append(fmt.Sprintf("results[%d](%s): %v \n", i, arg.Name, string(d)))
+		}
 	}
 	return
 }
@@ -353,7 +361,7 @@ func CallContract(method string, args []string, log *ui.MultilineEntry) {
 	}
 
 	msg := "确认发起此交易?"
-	view.ConfirmDialog(msg, func() {
+	widget.ConfirmDialog(msg, func() {
 		// 开始广播交易
 		_, err = veCli.PushTx(context.Background(), raw)
 		if err != nil {

@@ -14,7 +14,7 @@ import (
 	"github.com/vechain/thor/tx"
 	"github.com/wupeaking/vechaintool/models"
 	"github.com/wupeaking/vechaintool/vechainclient"
-	"github.com/wupeaking/vechaintool/view"
+	"github.com/wupeaking/vechaintool/widget"
 	"math/big"
 	"strings"
 	"time"
@@ -84,7 +84,7 @@ func Transfer(currecy, amount, to, contract string, log *ui.MultilineEntry) {
 
 	msg := fmt.Sprintf("Confirm sending  %s %s to %s, This transaction will cost Gas: %d",
 		value.String(), currecy, to, gasUsed)
-	view.ConfirmDialog(msg, func() {
+	widget.ConfirmDialog(msg, func() {
 		// 广播交易
 		txid, err := veCli.PushTx(context.Background(), rawTx)
 		if err != nil {
