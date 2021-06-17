@@ -10,7 +10,7 @@ func MakeSettingPage(mainwin *ui.Window) ui.Control {
 	vbox := ui.NewVerticalBox()
 	vbox.SetPadded(true)
 
-	group := ui.NewGroup("setting list")
+	group := ui.NewGroup("设置页列表")
 	group.SetMargined(true)
 	vbox.Append(group, false)
 
@@ -23,15 +23,15 @@ func MakeSettingPage(mainwin *ui.Window) ui.Control {
 	privKeyEntry := ui.NewPasswordEntry()
 	contractEntry := ui.NewEntry()
 	rpcEntry := ui.NewEntry()
-	entryForm.Append("private key(hex)", privKeyEntry, false)
-	entryForm.Append("contract address", contractEntry, false)
-	entryForm.Append("vechain rpc", rpcEntry, false)
+	entryForm.Append("私钥(十六进制)", privKeyEntry, false)
+	entryForm.Append("合约地址", contractEntry, false)
+	entryForm.Append("RPC服务地址", rpcEntry, false)
 
 	grid := ui.NewGrid()
 	grid.SetPadded(true)
 	entryForm.Append("", grid, false)
 
-	abiBtn := ui.NewButton("open abi file")
+	abiBtn := ui.NewButton("打开ABI文件")
 	abiEntry := ui.NewEntry()
 	abiEntry.SetReadOnly(true)
 	abiBtn.OnClicked(func(*ui.Button) {
@@ -58,7 +58,7 @@ func MakeSettingPage(mainwin *ui.Window) ui.Control {
 		0, 0, 2, 1,
 		false, ui.AlignCenter, false, ui.AlignStart)
 
-	saveBtn := ui.NewButton("save setting")
+	saveBtn := ui.NewButton("保存设置")
 	saveBtn.OnClicked(func(*ui.Button) {
 		control.SaveSetting(privKeyEntry.Text(), contractEntry.Text(), rpcEntry.Text(), abiEntry.Text(), mainwin)
 		RefreshfPage("settingPage")
@@ -68,7 +68,7 @@ func MakeSettingPage(mainwin *ui.Window) ui.Control {
 		0, 0, 1, 1,
 		false, ui.AlignFill, false, ui.AlignFill)
 
-	loadBtn := ui.NewButton("load setting")
+	loadBtn := ui.NewButton("加载设置")
 	loadBtn.OnClicked(func(*ui.Button) {
 		control.LoadSetting(privKeyEntry, contractEntry, rpcEntry, abiEntry, mainwin)
 		RefreshfPage("settingPage")

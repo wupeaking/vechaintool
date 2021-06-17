@@ -15,7 +15,7 @@ func MakeTransferPage(mainwin *ui.Window) ui.Control {
 	tohbox.SetPadded(true)
 	vbox.Append(tohbox, false)
 	to := ui.NewEntry()
-	tohbox.Append(ui.NewLabel("to:           "), false)
+	tohbox.Append(ui.NewLabel("接收方:           "), false)
 	tohbox.Append(to, true)
 
 	// 添加金额
@@ -23,7 +23,7 @@ func MakeTransferPage(mainwin *ui.Window) ui.Control {
 	amounthbox.SetPadded(true)
 	vbox.Append(amounthbox, false)
 	amount := ui.NewEntry()
-	amounthbox.Append(ui.NewLabel("amount:  "), false)
+	amounthbox.Append(ui.NewLabel("金额:  "), false)
 	amounthbox.Append(amount, true)
 
 	// 选择币种类型
@@ -34,7 +34,7 @@ func MakeTransferPage(mainwin *ui.Window) ui.Control {
 	cbox.Append("VET")
 	cbox.Append("VTHO")
 	cbox.Append("ERC20")
-	currecyhbox.Append(ui.NewLabel("currency type:"), false)
+	currecyhbox.Append(ui.NewLabel("货币类型:"), false)
 	currecyhbox.Append(cbox, false)
 
 	currecy := ""
@@ -51,7 +51,7 @@ func MakeTransferPage(mainwin *ui.Window) ui.Control {
 
 	// 选择币种类型
 	erc20Addr := ui.NewEntry()
-	currecyhbox.Append(ui.NewLabel("token address:"), false)
+	currecyhbox.Append(ui.NewLabel("token地址:"), false)
 	currecyhbox.Append(erc20Addr, true)
 
 	// 设置费用
@@ -71,7 +71,7 @@ func MakeTransferPage(mainwin *ui.Window) ui.Control {
 	gashbox.Append(slider, false)
 	gashbox.Append(spinbox, false)
 
-	txBtn := ui.NewButton("transfer")
+	txBtn := ui.NewButton("转账")
 	vbox.Append(txBtn, true)
 	vbox.Append(ui.NewHorizontalSeparator(), false)
 

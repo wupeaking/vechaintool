@@ -10,7 +10,7 @@ import (
 var mainwin *ui.Window
 
 func setupUI() {
-	mainwin = ui.NewWindow("vechain smart contract tools", 640, 480, true)
+	mainwin = ui.NewWindow("区块链智能合约调试助手 V1.0", 640, 480, true)
 	mainwin.OnClosing(func(*ui.Window) bool {
 		ui.Quit()
 		return true
@@ -23,20 +23,20 @@ func setupUI() {
 	mainwin.SetChild(tab)
 	mainwin.SetMargined(true)
 
-	tab.Append("setting", view.MakeSettingPage(mainwin))
+	tab.Append("设置", view.MakeSettingPage(mainwin))
 	tab.SetMargined(0, true)
 
-	tab.Append("transfer", view.MakeTransferPage(mainwin))
+	tab.Append("交易", view.MakeTransferPage(mainwin))
 	tab.SetMargined(1, true)
 
-	tab.Append("contract", view.MakeContractPage(mainwin))
+	tab.Append("合约调试", view.MakeContractPage(mainwin))
 	tab.SetMargined(2, true)
 
-	tab.Append("encoding", view.MakeEncodingPage(mainwin))
+	tab.Append("编码", view.MakeEncodingPage(mainwin))
 	tab.SetMargined(3, true)
 	view.RegistRefreshPage("settingPage", func() {
 		tab.Delete(2)
-		tab.InsertAt("contract", 2, view.MakeContractPage(mainwin))
+		tab.InsertAt("合约调试", 2, view.MakeContractPage(mainwin))
 	})
 
 	go view.StartRefresh()

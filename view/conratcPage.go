@@ -2,6 +2,7 @@ package view
 
 import (
 	"fmt"
+
 	"github.com/andlabs/ui"
 	"github.com/wupeaking/vechaintool/control"
 	"github.com/wupeaking/vechaintool/models"
@@ -12,7 +13,7 @@ func MakeContractPage(window *ui.Window) ui.Control {
 	hbox := ui.NewHorizontalBox()
 	hbox.SetPadded(true)
 
-	group := ui.NewGroup("view function")
+	group := ui.NewGroup("视图函数")
 	group.SetMargined(true)
 	hbox.Append(group, true)
 
@@ -26,7 +27,7 @@ func MakeContractPage(window *ui.Window) ui.Control {
 	}
 	vbox.Append(viewbox, false)
 
-	argsGroup := ui.NewGroup("args list")
+	argsGroup := ui.NewGroup("参数列表")
 	vbox.Append(argsGroup, false)
 
 	callEntrys := make([]*ui.Entry, 0)
@@ -49,7 +50,7 @@ func MakeContractPage(window *ui.Window) ui.Control {
 		argsGroup.SetChild(form)
 	})
 
-	callBtn := ui.NewButton("call")
+	callBtn := ui.NewButton("调用")
 	callResult := ui.NewMultilineEntry()
 
 	callBtn.OnClicked(func(button *ui.Button) {
@@ -64,7 +65,7 @@ func MakeContractPage(window *ui.Window) ui.Control {
 	vbox.Append(callResult, false)
 
 	//------------- 状态函数
-	statusGroup := ui.NewGroup("status function")
+	statusGroup := ui.NewGroup("状态函数")
 	statusGroup.SetMargined(true)
 	hbox.Append(statusGroup, true)
 
@@ -78,7 +79,7 @@ func MakeContractPage(window *ui.Window) ui.Control {
 	}
 	statusVbox.Append(statusviewbox, false)
 
-	statusArgsGroup := ui.NewGroup("args list")
+	statusArgsGroup := ui.NewGroup("参数列表")
 	statusVbox.Append(statusArgsGroup, false)
 
 	entrys := make([]*ui.Entry, 0)
@@ -101,7 +102,7 @@ func MakeContractPage(window *ui.Window) ui.Control {
 		statusArgsGroup.SetChild(form)
 	})
 
-	txBtn := ui.NewButton("start transact")
+	txBtn := ui.NewButton("启动调用")
 	txResult := ui.NewMultilineEntry()
 
 	txBtn.OnClicked(func(button *ui.Button) {
