@@ -33,6 +33,7 @@ func MakeTransferPage(mainwin *ui.Window) ui.Control {
 	cbox := ui.NewCombobox()
 	cbox.Append("VET")
 	cbox.Append("VTHO")
+	cbox.Append("ETH")
 	cbox.Append("ERC20")
 	currecyhbox.Append(ui.NewLabel("货币类型:"), false)
 	currecyhbox.Append(cbox, false)
@@ -67,12 +68,12 @@ func MakeTransferPage(mainwin *ui.Window) ui.Control {
 	gashbox := ui.NewHorizontalBox()
 	gashbox.SetPadded(true)
 	vbox.Append(gashbox, false)
-	gashbox.Append(ui.NewLabel("GasPriceCoef:    "), false)
-	gashbox.Append(slider, false)
+	gashbox.Append(ui.NewLabel("Gas价格:    "), false)
+	gashbox.Append(slider, true)
 	gashbox.Append(spinbox, false)
 
 	txBtn := ui.NewButton("转账")
-	vbox.Append(txBtn, true)
+	vbox.Append(txBtn, false)
 	vbox.Append(ui.NewHorizontalSeparator(), false)
 
 	oplog := ui.NewMultilineEntry()
